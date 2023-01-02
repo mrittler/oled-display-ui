@@ -40,7 +40,7 @@
 #error "Unkown operating system"
 #endif
 
-#include "OLEDDisplay.h"
+#include "Adafruit_GFX.h"
 
 //#define DEBUG_OLEDDISPLAYUI(...) Serial.printf( __VA_ARGS__ )
 
@@ -106,13 +106,13 @@ struct LoadingStage {
   void (*callback)();
 };
 
-typedef void (*FrameCallback)(OLEDDisplay *display,  OLEDDisplayUiState* state, int16_t x, int16_t y);
-typedef void (*OverlayCallback)(OLEDDisplay *display,  OLEDDisplayUiState* state);
-typedef void (*LoadingDrawFunction)(OLEDDisplay *display, LoadingStage* stage, uint8_t progress);
+typedef void (*FrameCallback)(Adafruit_GFX  *display,  OLEDDisplayUiState* state, int16_t x, int16_t y);
+typedef void (*OverlayCallback)(Adafruit_GFX  *display,  OLEDDisplayUiState* state);
+typedef void (*LoadingDrawFunction)(Adafruit_GFX  *display, LoadingStage* stage, uint8_t progress);
 
 class OLEDDisplayUi {
   private:
-    OLEDDisplay             *display;
+    Adafruit_GFX              *display;
 
     // Symbols for the Indicator
     IndicatorPosition   indicatorPosition;
@@ -171,7 +171,7 @@ class OLEDDisplayUi {
 
   public:
 
-    OLEDDisplayUi(OLEDDisplay *display);
+    OLEDDisplayUi(Adafruit_GFX *display);
 
     /**
      * Initialise the display

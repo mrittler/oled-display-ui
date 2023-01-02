@@ -31,15 +31,15 @@
 
 #include "OLEDDisplayUi.h"
 
-void LoadingDrawDefault(OLEDDisplay *display, LoadingStage* stage, uint8_t progress) {
-      display->setTextAlignment(TEXT_ALIGN_CENTER);
-      display->setFont(ArialMT_Plain_10);
-      display->drawString(64, 18, stage->process);
-      display->drawProgressBar(4, 32, 120, 8, progress);
+void LoadingDrawDefault(Adafruit_GFX *display, LoadingStage* stage, uint8_t progress) {
+  // display->setTextAlignment(TEXT_ALIGN_CENTER);
+  // display->setFont(ArialMT_Plain_10);
+  // display->drawString(64, 18, stage->process);
+  // display->drawProgressBar(4, 32, 120, 8, progress);
 };
 
 
-OLEDDisplayUi::OLEDDisplayUi(OLEDDisplay *display) {
+OLEDDisplayUi::OLEDDisplayUi(Adafruit_GFX *display) {
   this->display = display;
 
   indicatorPosition = BOTTOM;
@@ -69,7 +69,7 @@ OLEDDisplayUi::OLEDDisplayUi(OLEDDisplay *display) {
 }
 
 void OLEDDisplayUi::init() {
-  this->display->init();
+  // this->display->init();
 }
 
 void OLEDDisplayUi::setTargetFPS(uint8_t fps){
@@ -162,9 +162,10 @@ void OLEDDisplayUi::runLoadingProcess(LoadingStage* stages, uint8_t stagesCount)
   uint8_t increment = 100 / stagesCount;
 
   for (uint8_t i = 0; i < stagesCount; i++) {
-    display->clear();
+    // this->display->clearDisplay();
+    this->display->fillScreen(0);
     this->loadingDrawFunction(this->display, &stages[i], progress);
-    display->display();
+    // this->display->display();
 
     stages[i].callback();
 
@@ -172,9 +173,10 @@ void OLEDDisplayUi::runLoadingProcess(LoadingStage* stages, uint8_t stagesCount)
     yield();
   }
 
-  display->clear();
+  // display->clearDisplay();
+  this->display->fillScreen(0);
   this->loadingDrawFunction(this->display, &stages[stagesCount-1], progress);
-  display->display();
+  // display->display();
 
   delay(150);
 }
@@ -280,13 +282,14 @@ void OLEDDisplayUi::tick() {
       break;
   }
 
-  this->display->clear();
+  // this->display->clearDisplay();
+  this->display->fillScreen(0);
   this->drawFrame();
   if (shouldDrawIndicators) {
     this->drawIndicator();
   }
   this->drawOverlays();
-  this->display->display();
+  // this->display->display();
 }
 
 void OLEDDisplayUi::resetState() {
@@ -417,7 +420,7 @@ void OLEDDisplayUi::drawIndicator() {
 
     //Space between indicators - reduce for small screen sizes
     uint16_t indicatorSpacing = 12;
-    if (this->display->getHeight() < 64 && (this->indicatorPosition == RIGHT || this->indicatorPosition == LEFT)) {
+    if (this->display->height() < 64 && (this->indicatorPosition == RIGHT || this->indicatorPosition == LEFT)) {
       indicatorSpacing = 6;
     }
 
@@ -455,7 +458,7 @@ void OLEDDisplayUi::drawIndicator() {
          image = this->inactiveSymbol;
       }
 
-      this->display->drawFastImage(x, y, 8, 8, image);
+      this->display->drawBitmap(x, y, image, 8, 8, 1);
     }
 }
 
